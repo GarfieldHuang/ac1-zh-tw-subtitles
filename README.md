@@ -71,6 +71,8 @@ SubtitleSynchAC1 會載入 U+0000–U+FFFF 範圍的字形，所以中日韓字�
 
 ## 字幕檔從哪來
 
+https://mega.nz/file/qRYXTRDA#fQ49BNxmMSCQbZpbU1-u9A4AatkWXrCyVXlQEvtADfc 中英文字幕
+
 `subtitles.json` 格式是「音效 ID → 字幕文字」，文字中用 `<wait=秒數>` 分段、`<duration=秒數>` 結尾：
 
 ```json
