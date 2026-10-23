@@ -1,0 +1,9 @@
+# Game dialogue and fonts are copyrighted; never commit them
+*.json
+!config/*.json
+*.ttf
+*.ttc
+*.zip
+*.asi
+*.dll
+__pycache__/
