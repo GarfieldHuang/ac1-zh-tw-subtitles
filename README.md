@@ -11,10 +11,30 @@
 | 項目 | 狀態 |
 |---|---|
 | 對話字幕 | 上英下中雙語，時間點與原版同步 |
-| 遊戲介面 | 英文（中文介面外掛會在古代切回現代時崩潰，見下方地雷 4） |
+| 遊戲介面 | 可選繁中（中文介面外掛可能在古代切回現代時崩潰，見下方地雷 4） |
 | 開場影片 | 跳過 |
 
 測試環境：Windows 11、Steam 版 v1.02（`AssassinsCreed_Dx9.exe` MD5 `8E72C3333743780E43BC2C34BBF625F9`）。
+
+## 一鍵安裝
+
+下載本 repo（Code → Download ZIP）解壓後，雙擊 **`install.bat`**。它會依序：
+
+1. 從 Steam 資料庫自動找到遊戲資料夾（找不到會請你貼路徑）
+2. 備份原本的 `dinput8.dll` 與 `scripts\` 到遊戲資料夾裡的 `_backup_日期時間\`
+3. 從 GitHub 下載並安裝三個 mod（版本固定，見下表）
+4. 套用設定：字幕框高度修正、跳過開場影片
+5. 把微軟正黑體複製成 `scripts\subtitles.ttf`
+6. 問你雙語 `subtitles.json` 放在哪（本 repo 不附字幕內容；跳過的話先維持英文字幕）
+7. 問你要不要裝中文介面：要的話會開啟其樂帖子讓你下載中文化包，解壓後貼上資料夾路徑，程式會自動挑出 1024 穩定版外掛與原版繁中字庫
+8. 把 Steam 啟動選項複製到剪貼簿，你只要到 Steam 貼上
+
+進階用法（全部參數可省略）：
+
+```bat
+install.bat -GameDir "D:\Steam\steamapps\common\Assassins Creed" -SubtitlesJson "D:\subtitles.json" -ChinesePackDir "D:\ac1_cn" -Yes
+install.bat -SkipChineseUI
+```
 
 ## 需要的 mod
 
@@ -26,7 +46,7 @@
 | EaglePatchAC1 | 穩定性修正、跳過開場影片 | [Sergeanur/EaglePatch](https://github.com/Sergeanur/EaglePatch/releases) |
 | SubtitleSynchAC1 | 依語音事件顯示同步字幕（讀 `subtitles.json`） | [bloxtbc/SubtitleSynchAC1](https://github.com/bloxtbc/SubtitleSynchAC1/releases) |
 
-## 安裝步驟
+## 手動安裝步驟
 
 1. **先備份**遊戲資料夾（Steam：右鍵遊戲 → 管理 → 瀏覽本機檔案）。
 2. 把 `dinput8.dll` 放進遊戲根目錄。
@@ -68,7 +88,10 @@ SubtitleSynchAC1 會載入 U+0000–U+FFFF 範圍的字形，所以中日韓字�
    ```
 2. **雙語第二行被裁掉。** SubtitleSynchAC1 預設 `PaddingY=-25`，字幕框高度 = 文字高度 + PaddingY，單行英文靠 ImGui 最小視窗高度撐住，兩行就會被切掉下面那行。改成正數。
 3. **中文顯示成問號或空白。** 附帶的 `subtitles.ttf` 只有拉丁字母，要換成 CJK 字型。
-4. **中文介面外掛會崩潰。** 坊間流傳的中文介面包（`LG_AC.asi`，2008 年官方繁中文字）會讓遊戲在 `AssassinsCreed_Dx9.exe+0x54652` 發生存取違規。逐一停用 mod 實測：只有載入它時會崩，其他 mod 單獨都正常。快取 2048 版開機就當，1024 版能玩一陣子，但從古代記憶切回現代時必當。最後選擇不裝中文介面。
+4. **中文介面外掛會崩潰。** 坊間流傳的中文介面包（`LG_AC.asi`，2008 年官方繁中文字）會讓遊戲在 `AssassinsCreed_Dx9.exe+0x54652` 發生存取違規。逐一停用 mod 實測：只有載入它時會崩，其他 mod 單獨都正常。快取 2048 版開機就當，1024 版能玩一陣子，但從古代記憶切回現代時容易當。
+   - 除錯器抓到的現場：遊戲背景工作執行緒（`exe+0x57150` 的佇列迴圈）呼叫一個已被釋放的物件；呼叫鏈上沒有 `LG_AC` 自己的程式碼。
+   - 已排除：網路連線（加網路封鎖仍當）、CPU 核心數（限 4 核仍 2/3 當）、顯示驅動（換 DXVK 3.1.1 仍 3/4 當）。
+   - 實用解法：平常開著中文介面；遇到切回現代就當的段落，關遊戲 → 執行 `tools\toggle-chinese-ui.bat` 關閉 → 讀檔過關 → 再開回來。存檔不受影響。
 5. **OneDrive 會被暫停。** Windows 遊戲模式偵測到遊戲時會暫停 OneDrive 同步，遊戲崩潰退出後不會自動恢復。解法：遊戲中按 `Win + G` → 設定 → 取消勾選「記住這是遊戲」，或手動按 OneDrive「繼續同步」。
 
 ## 字幕檔從哪來
